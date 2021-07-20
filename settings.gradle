@@ -1,0 +1,4 @@
+rootProject.name = 'raftregister'
+include 'core'
+include 'client'
+include 'server'
