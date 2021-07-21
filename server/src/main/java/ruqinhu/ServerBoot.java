@@ -1,13 +1,11 @@
-package com.ruqinhu.client;
+package ruqinhu;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ClientApplication {
-
+public class ServerBoot {
     public static void main(String[] args) {
-        SpringApplication.run(ClientApplication.class, args);
+        SpringApplication.run(ServerBoot.class, args);
     }
-
 }

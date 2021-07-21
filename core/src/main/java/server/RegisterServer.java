@@ -79,43 +79,33 @@ public class RegisterServer {
         return response;
     }
 
-    // @Todo 改为 start 方法，参数从配置文件中读取
-    public static void main(final String[] args) throws IOException {
-//        if (args.length != 4) {
-//            System.out
-//                    .println("Useage : java com.alipay.sofa.jraft.example.counter.CounterServer {dataPath} {groupId} {serverId} {initConf}");
-//            System.out
-//                    .println("Example: java com.alipay.sofa.jraft.example.counter.CounterServer /tmp/server1 counter 127.0.0.1:8081 127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083");
-//            System.exit(1);
-//        }
-        final String dataPath = "D:\\log";
-        final String groupId = "registerGroup";
-        final String serverIdStr = "127.0.0.1:8081";
-        final String initConfStr = "127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083";
 
+    public static RegisterServer createInstance(RegisterServerConfig config) throws IOException {
         final NodeOptions nodeOptions = new NodeOptions();
         // 为了测试,调整 snapshot 间隔等参数
         // 设置选举超时时间为 1 秒
-        nodeOptions.setElectionTimeoutMs(1000);
+        nodeOptions.setElectionTimeoutMs(config.getNodeElectionTimeoutMs());
         // 关闭 CLI 服务。
-        nodeOptions.setDisableCli(false);
+        nodeOptions.setDisableCli(config.getDisableCli());
         // 每隔30秒做一次 snapshot
-        nodeOptions.setSnapshotIntervalSecs(30);
+        nodeOptions.setSnapshotIntervalSecs(config.getSnapshotIntervalSecs());
         // 解析参数
         final PeerId serverId = new PeerId();
-        if (!serverId.parse(serverIdStr)) {
-            throw new IllegalArgumentException("Fail to parse serverId:" + serverIdStr);
+        if (!serverId.parse(config.getServerIdStr())) {
+            throw new IllegalArgumentException("Fail to parse serverId:" + config.getServerIdStr());
         }
         final Configuration initConf = new Configuration();
-        if (!initConf.parse(initConfStr)) {
-            throw new IllegalArgumentException("Fail to parse initConf:" + initConfStr);
+        if (!initConf.parse(config.getInitConfStr())) {
+            throw new IllegalArgumentException("Fail to parse initConf:" + config.getInitConfStr());
         }
         // 设置初始集群配置
         nodeOptions.setInitialConf(initConf);
 
         // 启动
-        final RegisterServer counterServer = new RegisterServer(dataPath, groupId, serverId, nodeOptions);
-        System.out.println("Started counter server at port:"
+        final RegisterServer counterServer = new RegisterServer(config.getDataPath(), config.getGroupId(), serverId, nodeOptions);
+        System.out.println("Started register server at port:"
                 + counterServer.getNode().getNodeId().getPeerId().getPort());
+        return counterServer;
     }
+
 }

@@ -2,7 +2,7 @@ package client;
 
 public class RegisterClientConfig {
 
-    private String groupId = "groupId";
+    private String groupId = "registerGroup";
 
     private String confStr = "127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083";
 

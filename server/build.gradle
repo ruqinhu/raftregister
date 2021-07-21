@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+
 }
 
 group 'org.ruqinhu'
@@ -8,6 +9,10 @@ version '1.0-SNAPSHOT'
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.5.2'
+
+    compile project(':core')
 }
 
 test {
