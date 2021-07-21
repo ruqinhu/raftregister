@@ -26,7 +26,7 @@ import static entity.RegisterOperation.REGISTER;
 
 public class RegisterStateMachine extends StateMachineAdapter {
 
-    private Map<String, String> idRegMap = new HashMap<>();
+    private final Map<String, String> idRegMap = new HashMap<>();
 
     /**
      * Leader term

@@ -20,9 +20,9 @@ import java.io.IOException;
 
 public class RegisterServer {
 
-    private RaftGroupService raftGroupService;
-    private Node node;
-    private RegisterStateMachine fsm;
+    private final RaftGroupService raftGroupService;
+    private final Node node;
+    private final RegisterStateMachine fsm;
 
     public RegisterServer(final String dataPath, final String groupId, final PeerId serverId,
                          final NodeOptions nodeOptions) throws IOException {

@@ -17,3 +17,10 @@ raft 相关实体类：
    RegisterStateMachine： raft 成员之间注册信息的保存和获取
    RegisterService： 代理 server，提供 request 的处理方法
    RegisterServer： 持有 raft 的 node 节点，通过 node 提供 raft 能力
+
+
+服务端之间共享数据，不需要关心，raft 自动共享
+
+客户端通过 RegisterClient 进行注册和续约，需要和服务端一直保持连接，服务端会定时拉取客户端传递过来的数据。
+
+客户端传给服务端的数据，可以做成过期的和不过期的，不过期的就是配置数据，过期需要续约的就是注册信息。
