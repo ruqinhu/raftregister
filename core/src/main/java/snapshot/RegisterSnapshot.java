@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterSnapshot {
@@ -35,7 +36,7 @@ public class RegisterSnapshot {
     public boolean save(final Map<String, String> value) {
         try {
             byte[] byteValue = SerializerManager.getSerializer(SerializerManager.Hessian2).serialize(value);
-            FileUtils.writeStringToFile(new File(path), Arrays.toString(byteValue), Charset.defaultCharset());
+            FileUtils.writeByteArrayToFile(new File(path), byteValue);
             return true;
         } catch (IOException e) {
             LOG.error("Fail to save snapshot", e);
@@ -47,9 +48,9 @@ public class RegisterSnapshot {
     }
 
     public Map<String, String> load() throws IOException {
-        final String fileStr = FileUtils.readFileToString(new File(path), Charset.defaultCharset());
+        byte[] fileStr = FileUtils.readFileToByteArray(new File(path));
         try {
-            Map<String, String> map = SerializerManager.getSerializer(SerializerManager.Hessian2).deserialize(fileStr.getBytes(Charset.defaultCharset()), String.valueOf(Map.class));
+            Map<String, String> map = SerializerManager.getSerializer(SerializerManager.Hessian2).deserialize(fileStr, String.valueOf(HashMap.class));
             return map;
         } catch (CodecException e) {
             e.printStackTrace();

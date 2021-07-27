@@ -1,12 +1,16 @@
+测试的入口，test 包中 RegisterServer 和 RpcClient
+
 功能 list：
 客户端：
-   1. 向服务端注册接口  register2server()
-   2. 提供对外暴露的注册状态接口   registerStatus()
+   1. 向服务端注册接口  addAndGetRegister()  在注册时，启动定时线程进行续约
+   2. 提供对外暴露的注册状态接口   getRegister()  之获取信息
+      
    3. 提供修改 服务端 地址信息的接口 updateServerConfig()
    
 服务端:
    1. 提供注册接口给客户端，注册  addAndGetRegister()
    2. 拉取已注册客户端的健康状态，并续约  getRegister()
+      
    3. 选举成功后，更新客户端的 config 信息， updateClientConfig()   raft 代做
 
 服务端之间的共识，使用 jraft 。客户端保存 raft leader 信息，服务端选举后，通知 客户端最新的 leader 信息。
@@ -23,4 +27,12 @@ raft 相关实体类：
 
 客户端通过 RegisterClient 进行注册和续约，需要和服务端一直保持连接，服务端会定时拉取客户端传递过来的数据。
 
+
 客户端传给服务端的数据，可以做成过期的和不过期的，不过期的就是配置数据，过期需要续约的就是注册信息。
+
+
+如果是服务端拉取模式，则服务端需要保存客户端的地址，并且客户端如果有自定义的数据，需要有个地方保存。
+如果是客户端推送模式，则服务端不需要保存客户端的地址和数据，只需要接受注册。
+
+先实现客户端推送及续约模式。
+

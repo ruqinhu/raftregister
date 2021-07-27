@@ -13,6 +13,8 @@ import com.alipay.sofa.jraft.util.Utils;
 import entity.RegisterClosure;
 import entity.RegisterOperation;
 import snapshot.RegisterSnapshot;
+import storage.GuavaStorage;
+import storage.RegisterStorage;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +28,7 @@ import static entity.RegisterOperation.REGISTER;
 
 public class RegisterStateMachine extends StateMachineAdapter {
 
-    private final Map<String, String> idRegMap = new HashMap<>();
+    private final RegisterStorage storage = new GuavaStorage(20);
 
     /**
      * Leader term
@@ -58,12 +60,12 @@ public class RegisterStateMachine extends StateMachineAdapter {
             switch (registerOperation.getOp()) {
                 case REGISTER:
                     final Map<String, String> registerInfo = registerOperation.getData();
-                    idRegMap.putAll(registerInfo);
-                    current.putAll(idRegMap);
-                    System.out.printf("Added value=%s by delta=%s at logIndex=%s", idRegMap, registerInfo, iter.getIndex());
+                    storage.renewalRegisterInfo(registerInfo);
+                    current.putAll(storage.getRegisterInfo());
+                    System.out.printf("Added value=%s by delta=%s at logIndex=%s", storage.getRegisterInfo(), registerInfo, iter.getIndex());
                     break;
                 case PULL:
-                    current.putAll(idRegMap);
+                    current.putAll(storage.getRegisterInfo());
                     System.out.printf("Get value=%s at logIndex=%s%n", current, iter.getIndex());
                     break;
             }
@@ -79,7 +81,8 @@ public class RegisterStateMachine extends StateMachineAdapter {
 
     @Override
     public void onSnapshotSave(final SnapshotWriter writer, final Closure done) {
-        final Map<String, String> snapshotMap = this.idRegMap;
+        System.out.println("onSnapshotSave +++++++++++");
+        final Map<String, String> snapshotMap = storage.getRegisterInfo();
         Utils.runInThread(() -> {
             final RegisterSnapshot snapshot = new RegisterSnapshot(writer.getPath() + File.separator + "data");
             if (snapshot.save(snapshotMap)) {
@@ -96,6 +99,7 @@ public class RegisterStateMachine extends StateMachineAdapter {
 
     @Override
     public boolean onSnapshotLoad(final SnapshotReader reader) {
+        System.out.println("onSnapshotLoad +++++++++++");
         if (isLeader()) {
             System.out.println("Leader is not supposed to load snapshot");
             return false;
@@ -106,7 +110,7 @@ public class RegisterStateMachine extends StateMachineAdapter {
         }
         final RegisterSnapshot snapshot = new RegisterSnapshot(reader.getPath() + File.separator + "data");
         try {
-            this.idRegMap.putAll(snapshot.load());
+            this.storage.renewalRegisterInfo(snapshot.load());
             return true;
         } catch (final IOException e) {
             System.out.println("Fail to load snapshot from %s" + snapshot.getPath());
@@ -134,6 +138,6 @@ public class RegisterStateMachine extends StateMachineAdapter {
 
 
     public Map<String, String> getRegisterInfo() {
-        return new HashMap<>(idRegMap);
+        return new HashMap<>(storage.getRegisterInfo());
     }
 }
