@@ -6,7 +6,7 @@ public class RegisterClientConfig {
 
     private String confStr = "127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083";
 
-    private Long rpcTimeOut = 90000L;
+    private Long rpcTimeOut = 1000L;  //  超时时间要比续约时间短
 
 
     public String getGroupId() {

@@ -22,6 +22,8 @@ public class RenewScheduleTask implements Runnable{
         try {
             System.out.println("RenewScheduleTask +");
             task.run();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             executorService.schedule(this, delaySeconds, TimeUnit.SECONDS);
         }

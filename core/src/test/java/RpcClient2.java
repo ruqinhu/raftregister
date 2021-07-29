@@ -27,9 +27,10 @@ public class RpcClient2 {
 //            System.out.println(result);
 //        }
 
-        int n = 11;
+        int n = 11111;
         for (int i = 0; i < n; i++) {
             System.out.println(registerClient.getRegister(true));
+            Thread.sleep(2000);
         }
 
 
