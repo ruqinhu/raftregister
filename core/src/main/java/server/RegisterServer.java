@@ -1,9 +1,12 @@
 package server;
 
+import com.alipay.sofa.jraft.CliService;
 import com.alipay.sofa.jraft.Node;
 import com.alipay.sofa.jraft.RaftGroupService;
+import com.alipay.sofa.jraft.RaftServiceFactory;
 import com.alipay.sofa.jraft.conf.Configuration;
 import com.alipay.sofa.jraft.entity.PeerId;
+import com.alipay.sofa.jraft.option.CliOptions;
 import com.alipay.sofa.jraft.option.NodeOptions;
 import com.alipay.sofa.jraft.rpc.RaftRpcServerFactory;
 import com.alipay.sofa.jraft.rpc.RpcServer;
@@ -23,6 +26,8 @@ public class RegisterServer {
     private final RaftGroupService raftGroupService;
     private final Node node;
     private final RegisterStateMachine fsm;
+
+    private CliService cliService;
 
     public RegisterServer(final String dataPath, final String groupId, final PeerId serverId,
                          final NodeOptions nodeOptions) throws IOException {
@@ -48,6 +53,8 @@ public class RegisterServer {
         nodeOptions.setSnapshotUri(dataPath + File.separator + "snapshot");
         // 初始化 raft group 服务框架
         this.raftGroupService = new RaftGroupService(groupId, serverId, nodeOptions, rpcServer);
+        // 初始化 cliService ，用来向 leader 增删节点
+        this.initCliService();
         // 启动
         this.node = this.raftGroupService.start();
     }
@@ -64,6 +71,10 @@ public class RegisterServer {
         return this.raftGroupService;
     }
 
+    public CliService getCliService() {
+        return this.cliService;
+    }
+
     /**
      * Redirect request to new leader
      */
@@ -77,6 +88,13 @@ public class RegisterServer {
             }
         }
         return response;
+    }
+
+    private void initCliService() {
+        CliOptions cliOptions = new CliOptions();
+        cliOptions.setMaxRetry(2);
+        cliOptions.setTimeoutMs(5000);
+        this.cliService = RaftServiceFactory.createAndInitCliService(cliOptions);
     }
 
 

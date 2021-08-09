@@ -1,23 +1,22 @@
 package ruqinhu.register;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import server.RegisterServerConfig;
 
+import java.io.IOException;
+
 @Configuration
-public class RegisterServer implements ApplicationRunner {
+public class RegisterServer {
 
     @Bean
     public RegisterServerConfig getConfig() {
-        RegisterServerConfig config = new RegisterServerConfig();
-        return config;
+        return new RegisterServerConfig();
     }
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        server.RegisterServer registerServer = server.RegisterServer.createInstance(getConfig());
+    @Bean
+    public server.RegisterServer getRegisterServer() throws IOException {
+        return server.RegisterServer.createInstance(getConfig());
     }
 
 }

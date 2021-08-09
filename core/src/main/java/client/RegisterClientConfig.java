@@ -8,6 +8,8 @@ public class RegisterClientConfig {
 
     private Long rpcTimeOut = 1000L;  //  超时时间要比续约时间短
 
+    private Integer renewSeconds = 2000;
+
 
     public String getGroupId() {
         return groupId;
@@ -31,5 +33,13 @@ public class RegisterClientConfig {
 
     public void setRpcTimeOut(Long rpcTimeOut) {
         this.rpcTimeOut = rpcTimeOut;
+    }
+
+    public Integer getRenewSeconds() {
+        return renewSeconds;
+    }
+
+    public void setRenewSeconds(Integer renewSeconds) {
+        this.renewSeconds = renewSeconds;
     }
 }

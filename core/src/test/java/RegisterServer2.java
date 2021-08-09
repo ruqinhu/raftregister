@@ -41,9 +41,9 @@ public class RegisterServer2 {
         nodeOptions.setInitialConf(initConf);
 
         // 启动
-        final RegisterServer counterServer = new RegisterServer(dataPath, groupId, serverId, nodeOptions);
+        final RegisterServer registerServer = new RegisterServer(dataPath, groupId, serverId, nodeOptions);
         System.out.println("Started counter server at port:"
-                + counterServer.getNode().getNodeId().getPeerId().getPort());
+                + registerServer.getNode().getNodeId().getPeerId().getPort());
     }
 
 }

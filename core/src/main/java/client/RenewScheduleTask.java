@@ -20,7 +20,7 @@ public class RenewScheduleTask implements Runnable{
     @Override
     public void run() {
         try {
-            System.out.println("RenewScheduleTask +");
+//            System.out.println("RenewScheduleTask +");
             task.run();
         } catch (Exception e) {
             e.printStackTrace();

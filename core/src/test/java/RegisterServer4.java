@@ -1,6 +1,11 @@
+import com.alipay.sofa.jraft.CliService;
+import com.alipay.sofa.jraft.RaftServiceFactory;
+import com.alipay.sofa.jraft.Status;
 import com.alipay.sofa.jraft.conf.Configuration;
 import com.alipay.sofa.jraft.entity.PeerId;
+import com.alipay.sofa.jraft.option.CliOptions;
 import com.alipay.sofa.jraft.option.NodeOptions;
+import server.RaftConfigService;
 import server.RegisterServer;
 
 import java.io.IOException;
@@ -41,9 +46,22 @@ public class RegisterServer4 {
         nodeOptions.setInitialConf(initConf);
 
         // 启动
-        final RegisterServer counterServer = new RegisterServer(dataPath, groupId, serverId, nodeOptions);
+        final RegisterServer registerServer = new RegisterServer(dataPath, groupId, serverId, nodeOptions);
+
+
+        RaftConfigService.registerSelf(registerServer);
+
+
+//        PeerId peerId = new PeerId("127.0.0.1", 8084);
+//        CliOptions cliOptions = new CliOptions();
+//        cliOptions.setMaxRetry(2);
+//        cliOptions.setTimeoutMs(5000);
+//        CliService cliService = RaftServiceFactory.createAndInitCliService(cliOptions);
+//        Status status = cliService.addPeer(counterServer.getNode().getGroupId(), nodeOptions.getInitialConf(), peerId);
+//        System.out.println("aaa" + status);;
+
         System.out.println("Started counter server at port:"
-                + counterServer.getNode().getNodeId().getPeerId().getPort());
+                + registerServer.getNode().getNodeId().getPeerId().getPort());
     }
 
 }

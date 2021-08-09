@@ -60,7 +60,7 @@ public class RegisterClientServiceImpl implements RegisterClientService{
 
     private void schedule(Runnable runnable) {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        RenewScheduleTask renewScheduleTask = new RenewScheduleTask(executorService, 2, runnable);
+        RenewScheduleTask renewScheduleTask = new RenewScheduleTask(executorService, registerClientConfig.getRenewSeconds(), runnable);
         renewScheduleTask.run();
     }
 }
