@@ -2,7 +2,7 @@
 
 测试的入口，test 包中 RegisterServer1，RegisterServer2，RegisterServer3 和 RpcClient1，RpcClient2
 
-RegisterServer4 测试当新节点自动加入稳定的集群中，会手动调用 addPeer() 
+RegisterServer4 当新节点启动时会自动加入稳定的集群中。测试代码中会手动调用 addPeer()
 
 ## 二. 组件
 
