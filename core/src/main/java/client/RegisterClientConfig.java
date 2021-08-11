@@ -8,8 +8,9 @@ public class RegisterClientConfig {
 
     private Long rpcTimeOut = 1000L;  //  超时时间要比续约时间短
 
-    private Integer renewSeconds = 2000;
+    private Integer renewSeconds = 3;
 
+    private Boolean serverRenew = true;
 
     public String getGroupId() {
         return groupId;
@@ -41,5 +42,13 @@ public class RegisterClientConfig {
 
     public void setRenewSeconds(Integer renewSeconds) {
         this.renewSeconds = renewSeconds;
+    }
+
+    public Boolean getServerRenew() {
+        return serverRenew;
+    }
+
+    public void setServerRenew(Boolean serverRenew) {
+        this.serverRenew = serverRenew;
     }
 }

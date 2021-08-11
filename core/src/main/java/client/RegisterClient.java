@@ -4,7 +4,9 @@ import com.alipay.sofa.jraft.RouteTable;
 import com.alipay.sofa.jraft.error.RemotingException;
 import com.alipay.sofa.jraft.option.CliOptions;
 import com.alipay.sofa.jraft.rpc.impl.cli.CliClientServiceImpl;
+import duplex.ServerPullCliClientServiceImpl;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -12,8 +14,17 @@ public class RegisterClient {
 
     final RegisterClientServiceImpl registerClientService;
 
+    final Map<String, String> registerMap = new HashMap<>();
+
     public RegisterClient(CliOptions cliOptions, RegisterClientConfig registerClientConfig) {
-        final CliClientServiceImpl cliClientService = new CliClientServiceImpl();
+        new CliClientServiceImpl();
+        final CliClientServiceImpl cliClientService;
+        if (registerClientConfig.getServerRenew()) {
+            //  会处理服务端的请求
+            cliClientService = new ServerPullCliClientServiceImpl(this);
+        } else {
+            cliClientService = new CliClientServiceImpl();
+        }
         cliClientService.init(cliOptions);
         this.registerClientService = new RegisterClientServiceImpl(cliClientService, registerClientConfig);
     }
@@ -32,6 +43,7 @@ public class RegisterClient {
 
     public Map<String, String> addAndGetRegister(final Map<String, String> registerInfo){
         try {
+            registerMap.putAll(registerInfo);
             return registerClientService.addAndGetRegister(registerInfo);
         } catch (RemotingException | InterruptedException e) {
             e.printStackTrace();
@@ -41,11 +53,15 @@ public class RegisterClient {
 
     public Map<String, String> getRegister(final boolean readOnlySafe) {
         try {
-            return  registerClientService.getRegister(readOnlySafe);
+            return registerClientService.getRegister(readOnlySafe);
         } catch (RemotingException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Map<String, String> getRegisterMap() {
+        return new HashMap<>(registerMap);
     }
 
     public static RegisterClient createInstance(RegisterClientConfig config) {

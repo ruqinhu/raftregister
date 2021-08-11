@@ -10,8 +10,8 @@ import com.alipay.sofa.jraft.error.RaftError;
 import com.alipay.sofa.jraft.storage.snapshot.SnapshotReader;
 import com.alipay.sofa.jraft.storage.snapshot.SnapshotWriter;
 import com.alipay.sofa.jraft.util.Utils;
-import entity.RegisterClosure;
-import entity.RegisterOperation;
+import util.RegisterClosure;
+import util.RegisterOperation;
 import snapshot.RegisterSnapshot;
 import storage.GuavaStorage;
 import storage.RegisterStorage;
@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static entity.RegisterOperation.PULL;
-import static entity.RegisterOperation.REGISTER;
+import static util.RegisterOperation.PULL;
+import static util.RegisterOperation.REGISTER;
 
 public class RegisterStateMachine extends StateMachineAdapter {
 

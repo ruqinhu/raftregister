@@ -7,6 +7,7 @@ import com.alipay.sofa.jraft.rpc.impl.cli.CliClientServiceImpl;
 import rpc.PullRequest;
 import rpc.RegisterRequest;
 import rpc.RegisterResponse;
+import util.RenewScheduleTask;
 
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -28,13 +29,15 @@ public class RegisterClientServiceImpl implements RegisterClientService{
         final RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setData(registerInfo);
         RegisterResponse response = (RegisterResponse) cliClientService.getRpcClient().invokeSync(getLeader().getEndpoint(), registerRequest, registerClientConfig.getRpcTimeOut());
-        schedule(() -> {
-            try {
-                cliClientService.getRpcClient().invokeSync(getLeader().getEndpoint(), registerRequest, registerClientConfig.getRpcTimeOut());
-            } catch (InterruptedException | RemotingException e) {
-                e.printStackTrace();
-            }
-        });
+        if (!registerClientConfig.getServerRenew()) {
+            RenewScheduleTask.singleThreadRenew(() -> {
+                try {
+                    cliClientService.getRpcClient().invokeSync(getLeader().getEndpoint(), registerRequest, registerClientConfig.getRpcTimeOut());
+                } catch (InterruptedException | RemotingException e) {
+                    e.printStackTrace();
+                }
+            }, registerClientConfig.getRenewSeconds());
+        }
         return response.getValue();
     }
 
@@ -58,9 +61,4 @@ public class RegisterClientServiceImpl implements RegisterClientService{
         return registerClientConfig;
     }
 
-    private void schedule(Runnable runnable) {
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        RenewScheduleTask renewScheduleTask = new RenewScheduleTask(executorService, registerClientConfig.getRenewSeconds(), runnable);
-        renewScheduleTask.run();
-    }
 }

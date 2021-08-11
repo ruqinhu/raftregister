@@ -1,12 +1,13 @@
+package duplex;
+
 import com.alipay.sofa.jraft.conf.Configuration;
 import com.alipay.sofa.jraft.entity.PeerId;
 import com.alipay.sofa.jraft.option.NodeOptions;
 import server.RegisterServer;
-import server.RegisterServerConfig;
 
 import java.io.IOException;
 
-public class RegisterServer2 {
+public class RegisterServer1 {
 
     public static void main(String[] args) throws IOException {
 //        if (args.length != 4) {
@@ -16,9 +17,9 @@ public class RegisterServer2 {
 //                    .println("Example: java com.alipay.sofa.jraft.example.counter.CounterServer /tmp/server1 counter 127.0.0.1:8081 127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083");
 //            System.exit(1);
 //        }
-        final String dataPath = "D:\\log2";
+        final String dataPath = "D:\\log1";
         final String groupId = "registerGroup";
-        final String serverIdStr = "127.0.0.1:8082";
+        final String serverIdStr = "127.0.0.1:8081";
         final String initConfStr = "127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083";
 
         final NodeOptions nodeOptions = new NodeOptions();
@@ -42,8 +43,7 @@ public class RegisterServer2 {
         nodeOptions.setInitialConf(initConf);
 
         // 启动
-        RegisterServerConfig.getInstance().setServerRenew(false);
-        final RegisterServer registerServer = new RegisterServer(dataPath, groupId, serverId, nodeOptions);
+        final RegisterServer registerServer   = new RegisterServer(dataPath, groupId, serverId, nodeOptions);
         System.out.println("Started register server at port:"
                 + registerServer.getNode().getNodeId().getPeerId().getPort());
     }

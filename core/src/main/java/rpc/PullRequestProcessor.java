@@ -3,7 +3,7 @@ package rpc;
 import com.alipay.sofa.jraft.Status;
 import com.alipay.sofa.jraft.rpc.RpcContext;
 import com.alipay.sofa.jraft.rpc.RpcProcessor;
-import entity.RegisterClosure;
+import util.RegisterClosure;
 import raft.RegisterService;
 
 public class PullRequestProcessor implements RpcProcessor<PullRequest> {

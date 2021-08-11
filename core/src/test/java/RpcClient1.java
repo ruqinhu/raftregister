@@ -17,16 +17,18 @@ public class RpcClient1 {
         registerClientConfig.setGroupId(groupId);
         registerClientConfig.setConfStr(confStr);
         registerClientConfig.setRpcTimeOut(registerClientConfig.getRpcTimeOut());
+        registerClientConfig.setServerRenew(false);
 
         RegisterClient registerClient = new RegisterClient(new CliOptions(), registerClientConfig);
         registerClient.start();
 
-        int n = 11;
+        int n = 3;
         for (int i = 0; i < n; i++) {
             Map<String, String> registerMap = new HashMap<>();
             registerMap.put("key"+i, "abc");
             Map<String, String> result = registerClient.addAndGetRegister(registerMap);
             System.out.println(result);
+            Thread.sleep(1000);
         }
 
         System.out.println(registerClient.getRegister(true));

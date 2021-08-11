@@ -1,7 +1,6 @@
 package client;
 
 import com.alipay.sofa.jraft.error.RemotingException;
-import entity.RegisterClosure;
 
 import java.util.Map;
 

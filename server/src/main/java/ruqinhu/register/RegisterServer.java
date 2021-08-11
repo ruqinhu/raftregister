@@ -11,7 +11,7 @@ public class RegisterServer {
 
     @Bean
     public RegisterServerConfig getConfig() {
-        return new RegisterServerConfig();
+        return RegisterServerConfig.getInstance();
     }
 
     @Bean

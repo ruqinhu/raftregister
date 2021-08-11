@@ -1,8 +1,9 @@
+package duplex;
+
 import com.alipay.sofa.jraft.conf.Configuration;
 import com.alipay.sofa.jraft.entity.PeerId;
 import com.alipay.sofa.jraft.option.NodeOptions;
 import server.RegisterServer;
-import server.RegisterServerConfig;
 
 import java.io.IOException;
 
@@ -42,7 +43,6 @@ public class RegisterServer2 {
         nodeOptions.setInitialConf(initConf);
 
         // 启动
-        RegisterServerConfig.getInstance().setServerRenew(false);
         final RegisterServer registerServer = new RegisterServer(dataPath, groupId, serverId, nodeOptions);
         System.out.println("Started register server at port:"
                 + registerServer.getNode().getNodeId().getPeerId().getPort());

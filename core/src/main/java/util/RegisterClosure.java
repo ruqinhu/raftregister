@@ -1,4 +1,4 @@
-package entity;
+package util;
 
 import com.alipay.sofa.jraft.Closure;
 import rpc.RegisterResponse;

@@ -1,3 +1,5 @@
+package duplex;
+
 import client.RegisterClient;
 import client.RegisterClientConfig;
 import com.alipay.sofa.jraft.error.RemotingException;
@@ -15,7 +17,6 @@ public class RpcClient2 {
         registerClientConfig.setGroupId(groupId);
         registerClientConfig.setConfStr(confStr);
         registerClientConfig.setRpcTimeOut(registerClientConfig.getRpcTimeOut());
-        registerClientConfig.setServerRenew(false);
 
         RegisterClient registerClient = new RegisterClient(new CliOptions(), registerClientConfig);
         registerClient.start();

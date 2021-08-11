@@ -1,5 +1,6 @@
-package client;
+package util;
 
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +29,18 @@ public class RenewScheduleTask implements Runnable{
             executorService.schedule(this, delaySeconds, TimeUnit.SECONDS);
         }
 
+    }
+
+    public static void singleThreadRenew(Runnable runnable, int renewTimeout) {
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        RenewScheduleTask renewScheduleTask = new RenewScheduleTask(executorService, renewTimeout, runnable);
+        renewScheduleTask.run();
+    }
+
+
+    public static void main(String[] args) throws InterruptedException {
+        RenewScheduleTask.singleThreadRenew(() -> System.out.println("++++++++++++++++++++++++"), 1);
+        Thread.sleep(200000);
     }
 
 }

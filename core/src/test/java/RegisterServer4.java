@@ -7,6 +7,7 @@ import com.alipay.sofa.jraft.option.CliOptions;
 import com.alipay.sofa.jraft.option.NodeOptions;
 import server.RaftConfigService;
 import server.RegisterServer;
+import server.RegisterServerConfig;
 
 import java.io.IOException;
 
@@ -46,6 +47,7 @@ public class RegisterServer4 {
         nodeOptions.setInitialConf(initConf);
 
         // 启动
+        RegisterServerConfig.getInstance().setServerRenew(false);
         final RegisterServer registerServer = new RegisterServer(dataPath, groupId, serverId, nodeOptions);
 
 
@@ -60,7 +62,7 @@ public class RegisterServer4 {
 //        Status status = cliService.addPeer(counterServer.getNode().getGroupId(), nodeOptions.getInitialConf(), peerId);
 //        System.out.println("aaa" + status);;
 
-        System.out.println("Started counter server at port:"
+        System.out.println("Started register server at port:"
                 + registerServer.getNode().getNodeId().getPeerId().getPort());
     }
 

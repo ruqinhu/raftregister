@@ -16,6 +16,19 @@ public class RegisterServerConfig {
 
     private Integer snapshotIntervalSecs = 30;  //  snapshot
 
+    private Boolean serverRenew = true;
+
+    private static RegisterServerConfig config = null;
+
+    private RegisterServerConfig() {
+
+    }
+
+    public static RegisterServerConfig getInstance() {
+        if (config == null) config = new RegisterServerConfig();
+        return config;
+    }
+
     public String getDataPath() {
         return dataPath;
     }
@@ -70,5 +83,13 @@ public class RegisterServerConfig {
 
     public void setSnapshotIntervalSecs(Integer snapshotIntervalSecs) {
         this.snapshotIntervalSecs = snapshotIntervalSecs;
+    }
+
+    public Boolean getServerRenew() {
+        return serverRenew;
+    }
+
+    public void setServerRenew(Boolean serverRenew) {
+        this.serverRenew = serverRenew;
     }
 }

@@ -67,7 +67,7 @@ public class RegisterServer {
         return this.node;
     }
 
-    public RaftGroupService RaftGroupService() {
+    public RaftGroupService getRaftGroupService() {
         return this.raftGroupService;
     }
 

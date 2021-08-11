@@ -3,7 +3,8 @@ package rpc;
 import com.alipay.sofa.jraft.Status;
 import com.alipay.sofa.jraft.rpc.RpcContext;
 import com.alipay.sofa.jraft.rpc.RpcProcessor;
-import entity.RegisterClosure;
+import server.RegisterServerConfig;
+import util.RegisterClosure;
 import raft.RegisterService;
 
 public class RegisterRequestProcessor implements RpcProcessor<RegisterRequest> {
@@ -24,7 +25,11 @@ public class RegisterRequestProcessor implements RpcProcessor<RegisterRequest> {
             }
         };
 
-        this.registerService.addAndGetRegister(request.getData(), closure);
+        if (RegisterServerConfig.getInstance().getServerRenew()) {
+            this.registerService.addAndGetRegisterAndRenew(request.getData(), closure, rpcCtx.getRemoteAddress());
+        } else {
+            this.registerService.addAndGetRegister(request.getData(), closure);
+        }
     }
 
     @Override
