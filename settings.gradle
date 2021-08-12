@@ -1,4 +1,5 @@
 rootProject.name = 'raftregister'
 include 'core'
-include 'client'
-include 'server'
+include 'autoconfig'
+include 'example:client'
+include 'example:server'

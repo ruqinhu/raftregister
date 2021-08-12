@@ -1,4 +1,4 @@
-package ruqinhu;
+package org.ruqinhu.client;
 
 import client.RegisterClient;
 import org.springframework.boot.ApplicationArguments;
