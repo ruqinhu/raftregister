@@ -55,3 +55,7 @@ client： RenewScheduleTask#run(): 客户端调用 addAndGetRegister() 后，自
 2021-08-11 
 
 增加服务端拉取客户端注册信息，即拉模式，入口在 duplex 包下。
+
+2021-08-12
+
+调整包结构，增加 springboot starter 注入客户端方式
