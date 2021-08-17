@@ -3,7 +3,6 @@ package raft;
 import com.alipay.remoting.exception.CodecException;
 import com.alipay.remoting.exception.RemotingException;
 import com.alipay.remoting.serialization.SerializerManager;
-import com.alipay.sofa.jraft.Closure;
 import com.alipay.sofa.jraft.Status;
 import com.alipay.sofa.jraft.closure.ReadIndexClosure;
 import com.alipay.sofa.jraft.entity.Task;
@@ -11,17 +10,17 @@ import com.alipay.sofa.jraft.error.RaftError;
 import com.alipay.sofa.jraft.rpc.impl.BoltRpcServer;
 import duplex.rpc.ServerPullRequest;
 import duplex.rpc.ServerPullResponse;
-import util.RegisterClosure;
-import util.RegisterOperation;
 import org.apache.commons.lang.StringUtils;
 import server.RegisterServer;
-import util.RenewScheduleTask;
+import util.MetricScheduleThreadPoolExecutor;
+import util.RegisterClosure;
+import util.RegisterOperation;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class RegisterServiceImpl implements RegisterService {
 
@@ -31,6 +30,8 @@ public class RegisterServiceImpl implements RegisterService {
     private final Integer renewTimeout = 2;
 
     private final Integer rpcTimeout = 5000;
+
+    private final MetricScheduleThreadPoolExecutor executor = new MetricScheduleThreadPoolExecutor("renew", 8, null);
 
     public RegisterServiceImpl(RegisterServer counterServer) {
         this.registerServer = counterServer;
@@ -82,8 +83,7 @@ public class RegisterServiceImpl implements RegisterService {
     public void addAndGetRegisterAndRenew(Map<String, String> registerInfo, RegisterClosure closure, final String address) {
         this.addAndGetRegister(registerInfo, closure);
 
-        //  @Todo 一个任务一个处理线程，可以优化为线程池的方式处理
-        RenewScheduleTask.singleThreadRenew(() -> {
+        executor.scheduleAtFixedRate(() -> {
             System.out.println("拉取客户端注册信息定时任务开始执行：");
             if (registerServer.getRaftGroupService().getRpcServer() instanceof BoltRpcServer) {
                 BoltRpcServer boltRpcServer = (BoltRpcServer) registerServer.getRaftGroupService().getRpcServer();
@@ -102,7 +102,7 @@ public class RegisterServiceImpl implements RegisterService {
                     e.printStackTrace();
                 }
             }
-        }, renewTimeout);
+        }, renewTimeout, renewTimeout, TimeUnit.SECONDS);
     }
 
     private void applyOperation(final RegisterOperation op, final RegisterClosure closure) {

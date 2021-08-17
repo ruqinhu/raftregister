@@ -18,6 +18,9 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.13.2'
 
     implementation 'com.google.guava:guava:30.1.1-jre'
+
+    implementation 'io.dropwizard.metrics:metrics-core:4.2.3'
+    implementation 'io.dropwizard.metrics:metrics-json:4.2.3'
 }
 
 tasks.withType(JavaCompile) {

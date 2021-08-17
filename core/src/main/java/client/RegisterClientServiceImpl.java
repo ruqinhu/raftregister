@@ -7,17 +7,21 @@ import com.alipay.sofa.jraft.rpc.impl.cli.CliClientServiceImpl;
 import rpc.PullRequest;
 import rpc.RegisterRequest;
 import rpc.RegisterResponse;
+import util.MetricScheduleThreadPoolExecutor;
 import util.RenewScheduleTask;
 
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class RegisterClientServiceImpl implements RegisterClientService{
 
     private final CliClientServiceImpl cliClientService;
 
     private final RegisterClientConfig registerClientConfig;
+
+    private final MetricScheduleThreadPoolExecutor executor = new MetricScheduleThreadPoolExecutor("renew", 8, null);
 
     public RegisterClientServiceImpl(CliClientServiceImpl cliClientService, RegisterClientConfig registerClientConfig) {
         this.cliClientService = cliClientService;
@@ -30,13 +34,13 @@ public class RegisterClientServiceImpl implements RegisterClientService{
         registerRequest.setData(registerInfo);
         RegisterResponse response = (RegisterResponse) cliClientService.getRpcClient().invokeSync(getLeader().getEndpoint(), registerRequest, registerClientConfig.getRpcTimeOut());
         if (!registerClientConfig.getServerRenew()) {
-            RenewScheduleTask.singleThreadRenew(() -> {
+            executor.scheduleAtFixedRate(() -> {
                 try {
                     cliClientService.getRpcClient().invokeSync(getLeader().getEndpoint(), registerRequest, registerClientConfig.getRpcTimeOut());
                 } catch (InterruptedException | RemotingException e) {
                     e.printStackTrace();
                 }
-            }, registerClientConfig.getRenewSeconds());
+            }, registerClientConfig.getRenewSeconds(), registerClientConfig.getRenewSeconds(), TimeUnit.SECONDS);
         }
         return response.getValue();
     }

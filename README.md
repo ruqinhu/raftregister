@@ -59,3 +59,7 @@ client： RenewScheduleTask#run(): 客户端调用 addAndGetRegister() 后，自
 2021-08-12
 
 调整包结构，增加 springboot starter 注入客户端方式
+
+2021-08-17
+
+增加使用 metric 监控的线程池

@@ -4,7 +4,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class RenewScheduleTask implements Runnable{
+public class RenewScheduleTask implements Runnable {
 
     private final ScheduledExecutorService executorService;
 
