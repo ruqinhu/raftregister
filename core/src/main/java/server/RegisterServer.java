@@ -10,13 +10,14 @@ import com.alipay.sofa.jraft.option.CliOptions;
 import com.alipay.sofa.jraft.option.NodeOptions;
 import com.alipay.sofa.jraft.rpc.RaftRpcServerFactory;
 import com.alipay.sofa.jraft.rpc.RpcServer;
+import com.ruqinhu.RegisterResponse;
 import org.apache.commons.io.FileUtils;
 import raft.RegisterService;
 import raft.RegisterServiceImpl;
 import raft.RegisterStateMachine;
 import rpc.PullRequestProcessor;
 import rpc.RegisterRequestProcessor;
-import rpc.RegisterResponse;
+import util.GrpcClassLoadUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +39,7 @@ public class RegisterServer {
         final RpcServer rpcServer = RaftRpcServerFactory.createRaftRpcServer(serverId.getEndpoint());
         // 注册业务处理器
         RegisterService counterService = new RegisterServiceImpl(this);
+        GrpcClassLoadUtil.LoadClasses();
         rpcServer.registerProcessor(new PullRequestProcessor(counterService));
         rpcServer.registerProcessor(new RegisterRequestProcessor(counterService));
         // 初始化状态机
@@ -79,15 +81,15 @@ public class RegisterServer {
      * Redirect request to new leader
      */
     public RegisterResponse redirect() {
-        final RegisterResponse response = new RegisterResponse();
-        response.setSuccess(false);
+        final RegisterResponse.Builder responseBuild = RegisterResponse.newBuilder();
+        responseBuild.setSuccess(false);
         if (this.node != null) {
             final PeerId leader = this.node.getLeaderId();
             if (leader != null) {
-                response.setRedirect(leader.toString());
+                responseBuild.setRedirect(leader.toString());
             }
         }
-        return response;
+        return responseBuild.build();
     }
 
     private void initCliService() {

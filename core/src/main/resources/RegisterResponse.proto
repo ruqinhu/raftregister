@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.ruqinhu";
+option java_outer_classname = "RegisterResponseProto";
+
+message RegisterResponse
+
+{
+  bool success = 1;
+
+  map<string, string> value = 2;
+
+  string redirect = 3;
+
+  string errorMsg = 4;
+}

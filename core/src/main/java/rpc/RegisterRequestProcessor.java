@@ -3,9 +3,10 @@ package rpc;
 import com.alipay.sofa.jraft.Status;
 import com.alipay.sofa.jraft.rpc.RpcContext;
 import com.alipay.sofa.jraft.rpc.RpcProcessor;
+import com.ruqinhu.RegisterRequest;
+import raft.RegisterService;
 import server.RegisterServerConfig;
 import util.RegisterClosure;
-import raft.RegisterService;
 
 public class RegisterRequestProcessor implements RpcProcessor<RegisterRequest> {
 

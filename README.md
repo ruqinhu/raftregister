@@ -63,3 +63,7 @@ client： RenewScheduleTask#run(): 客户端调用 addAndGetRegister() 后，自
 2021-08-17
 
 增加使用 metric 监控的线程池
+
+2021-09-13
+
+使用 grpc 和 proto 作为客户端可服务端交互的 rpc 和 协议

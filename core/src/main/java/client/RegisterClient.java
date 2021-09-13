@@ -17,7 +17,6 @@ public class RegisterClient {
     final Map<String, String> registerMap = new HashMap<>();
 
     public RegisterClient(CliOptions cliOptions, RegisterClientConfig registerClientConfig) {
-        new CliClientServiceImpl();
         final CliClientServiceImpl cliClientService;
         if (registerClientConfig.getServerRenew()) {
             //  会处理服务端的请求

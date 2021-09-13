@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class RegisterServer1 {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 //        if (args.length != 4) {
 //            System.out
 //                    .println("Useage : java com.alipay.sofa.jraft.example.counter.CounterServer {dataPath} {groupId} {serverId} {initConf}");
@@ -44,6 +44,7 @@ public class RegisterServer1 {
         // 启动
         RegisterServerConfig.getInstance().setServerRenew(false);
         final RegisterServer registerServer   = new RegisterServer(dataPath, groupId, serverId, nodeOptions);
+        Thread.sleep(500000);
         System.out.println("Started register server at port:"
                 + registerServer.getNode().getNodeId().getPeerId().getPort());
     }

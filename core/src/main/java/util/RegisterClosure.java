@@ -1,7 +1,7 @@
 package util;
 
 import com.alipay.sofa.jraft.Closure;
-import rpc.RegisterResponse;
+import com.ruqinhu.RegisterResponse;
 
 import java.util.Map;
 
@@ -12,10 +12,11 @@ public abstract class RegisterClosure implements Closure {
     private RegisterResponse registerResponse;
 
     public void failure(final String errorMsg, final String redirect) {
-        final RegisterResponse response = new RegisterResponse();
-        response.setSuccess(false);
-        response.setErrorMsg(errorMsg);
-        response.setRedirect(redirect);
+        final RegisterResponse response = RegisterResponse.newBuilder()
+                .setSuccess(false)
+                .setErrorMsg(errorMsg)
+                .setRedirect(redirect)
+                .build();
         setValueResponse(response);
     }
 
@@ -36,9 +37,10 @@ public abstract class RegisterClosure implements Closure {
     }
 
     public void success(final Map<String, String> value) {
-        final RegisterResponse response = new RegisterResponse();
-        response.setValue(value);
-        response.setSuccess(true);
+        final RegisterResponse response = RegisterResponse.newBuilder()
+                .putAllValue(value)
+                .setSuccess(true)
+                .build();
         setValueResponse(response);
     }
 

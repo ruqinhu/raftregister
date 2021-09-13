@@ -1,14 +1,16 @@
+package grpc;
+
 import client.RegisterClient;
 import client.RegisterClientConfig;
 import com.alipay.sofa.jraft.error.RemotingException;
 import com.alipay.sofa.jraft.option.CliOptions;
-import util.GrpcClassLoadUtil;
+import com.ruqinhu.RegisterRequest;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
-public class RpcClient1 {
+public class GRpcClient1 {
 
     public static void main(String[] args) throws InterruptedException, TimeoutException, RemotingException {
         final String groupId = "registerGroup";
@@ -23,8 +25,6 @@ public class RpcClient1 {
         RegisterClient registerClient = new RegisterClient(new CliOptions(), registerClientConfig);
         registerClient.start();
 
-        GrpcClassLoadUtil.LoadClasses();
-
         int n = 3;
         for (int i = 0; i < n; i++) {
             Map<String, String> registerMap = new HashMap<>();
@@ -35,6 +35,7 @@ public class RpcClient1 {
         }
 
         System.out.println(registerClient.getRegister(true));
+
 
     }
 

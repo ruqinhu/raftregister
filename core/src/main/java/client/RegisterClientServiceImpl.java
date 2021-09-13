@@ -4,15 +4,12 @@ import com.alipay.sofa.jraft.RouteTable;
 import com.alipay.sofa.jraft.entity.PeerId;
 import com.alipay.sofa.jraft.error.RemotingException;
 import com.alipay.sofa.jraft.rpc.impl.cli.CliClientServiceImpl;
-import rpc.PullRequest;
-import rpc.RegisterRequest;
-import rpc.RegisterResponse;
+import com.ruqinhu.PullRequest;
+import com.ruqinhu.RegisterRequest;
+import com.ruqinhu.RegisterResponse;
 import util.MetricScheduleThreadPoolExecutor;
-import util.RenewScheduleTask;
 
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class RegisterClientServiceImpl implements RegisterClientService{
@@ -30,8 +27,7 @@ public class RegisterClientServiceImpl implements RegisterClientService{
 
     @Override
     public Map<String, String> addAndGetRegister(Map<String, String> registerInfo) throws RemotingException, InterruptedException {
-        final RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setData(registerInfo);
+        final RegisterRequest registerRequest = RegisterRequest.newBuilder().putAllData(registerInfo).build();
         RegisterResponse response = (RegisterResponse) cliClientService.getRpcClient().invokeSync(getLeader().getEndpoint(), registerRequest, registerClientConfig.getRpcTimeOut());
         if (!registerClientConfig.getServerRenew()) {
             executor.scheduleAtFixedRate(() -> {
@@ -42,15 +38,14 @@ public class RegisterClientServiceImpl implements RegisterClientService{
                 }
             }, registerClientConfig.getRenewSeconds(), registerClientConfig.getRenewSeconds(), TimeUnit.SECONDS);
         }
-        return response.getValue();
+        return response.getValueMap();
     }
 
     @Override
     public Map<String, String> getRegister(boolean readOnlySafe) throws RemotingException, InterruptedException {
-        final PullRequest pullRequest = new PullRequest();
-        pullRequest.setReadOnlySafe(readOnlySafe);
+        final PullRequest pullRequest = PullRequest.newBuilder().setIsReadOnlySafe(readOnlySafe).build();
         RegisterResponse response = (RegisterResponse) cliClientService.getRpcClient().invokeSync(getLeader().getEndpoint(), pullRequest, registerClientConfig.getRpcTimeOut());
-        return response.getValue();
+        return response.getValueMap();
     }
 
     private PeerId getLeader() {

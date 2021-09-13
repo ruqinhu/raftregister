@@ -3,8 +3,9 @@ package rpc;
 import com.alipay.sofa.jraft.Status;
 import com.alipay.sofa.jraft.rpc.RpcContext;
 import com.alipay.sofa.jraft.rpc.RpcProcessor;
-import util.RegisterClosure;
+import com.ruqinhu.PullRequest;
 import raft.RegisterService;
+import util.RegisterClosure;
 
 public class PullRequestProcessor implements RpcProcessor<PullRequest> {
 
@@ -24,7 +25,7 @@ public class PullRequestProcessor implements RpcProcessor<PullRequest> {
             }
         };
 
-        this.registerService.getRegister(request.isReadOnlySafe(), closure);
+        this.registerService.getRegister(request.getIsReadOnlySafe(), closure);
     }
 
     @Override
